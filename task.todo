@@ -9,5 +9,10 @@
     -[] if there a link between #start room and #end room 
 -[] throw error if file not valid
 -[] create tunnels and rooms 
+-[] finding paths
+-[] select the shortest depending on the number_of_ants
+-[] move ants
+-[] print movements
+-[] make the visualizer
 
         
