@@ -37,13 +37,16 @@ func ValidateAntfarmData(fileLines []string) (AntFarmData, error) {
 				data.StartingRoom = fileLines[i+1]
 				i++
 			}
-		}
-
-		if fileLines[i] == "##end" {
+		}else if fileLines[i] == "##end" {
 			if i+1 < len(fileLines){
 				data.EndingRoom = fileLines[i+1]
 				i++
 			}
+		}else if err := ValidateRoom(fileLines[i]); err != nil {
+			return AntFarmData{}, err
+
+		}else if err := ValidateLinks(fileLines[i]); err != nil {
+			return AntFarmData{}, err
 		}
 	}
 
@@ -70,19 +73,18 @@ func ValidateLinks(link string) error {
 //Verify room name's format and its coordonate
 func ValidateRoom(line string) error{
 	data := strings.Split(line, " ")
-	if len(data) != 3 {
-		return errors.New("Error: invalid data format, invalid room format")
-	}
-	//room name's never start with # or L
 	//room format : name cordx cordy
-	if strings.HasPrefix(data[0], "#") || strings.HasPrefix(data[0], "L") {
-		return errors.New("Error: invalid data format, invalid room name format")
-	}
+	if len(data) == 3 {
+		//room name's never start with # or L
+		if strings.HasPrefix(data[0], "#") || strings.HasPrefix(data[0], "L") {
+			return errors.New("Error: invalid data format, invalid room name format")
+		}
 
-	_, err1 := strconv.Atoi(data[1])
-	_, err2 := strconv.Atoi(data[2])
-	if err1 != nil || err2 != nil {
-		return errors.New("Error: invalid data format, invalid room coordinate")
+		_, err1 := strconv.Atoi(data[1])
+		_, err2 := strconv.Atoi(data[2])
+		if err1 != nil || err2 != nil {
+			return errors.New("Error: invalid data format, invalid room coordinate")
+		}
 	}
 
 	return nil
