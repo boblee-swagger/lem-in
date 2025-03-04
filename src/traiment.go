@@ -46,21 +46,29 @@ func ValidateAntfarmData(fileLines []string) (AntFarm, error) {
 				i++
 			}
 		}else{
-			err = ValideRoom(line);
+			err = ValideRoomFormat(line);
 			if err != nil {
 				return AntFarm{}, err
 			}else{
 				room := SetRoom(line)
 				data.Rooms = append(data.Rooms, room)
 			}
-			err = ValideLink(line); 
+			err = ValideLinkFormat(line); 
 			if err != nil {
 				return AntFarm{}, err
 			}else{
-				//collect the link
+				data.Links = append(data.Links, line)
 			}
 		}
 	}
+
+	for i:= 0; i<len(data.Links); i++{
+		err = ValidLinkedRoom(data.Rooms, data.Links[i])
+		if err != nil {
+			return AntFarm{}, err
+		}
+	}
+
 	if data.StartingRoom == "" || data.EndingRoom == "" {
 		return AntFarm{}, errors.New("error: invalid data format, starting room or ending room not found")
 	}
@@ -68,7 +76,7 @@ func ValidateAntfarmData(fileLines []string) (AntFarm, error) {
 }
 
 // Links must have the following syntax : a-b
-func ValideLink(link string) error {
+func ValideLinkFormat(link string) error {
 	test, err := regexp.MatchString(`^[A-Za-z0-9]+-[A-Za-z0-9]+$`, link)
 	if err != nil {
 		return errors.New("Error: incorrect pattern for links")
@@ -79,14 +87,13 @@ func ValideLink(link string) error {
 		//the room is link to itself
 		if lns[0] == lns[1] {
 			return errors.New("Error: invalid link")
-		}
+		}	
 	}
-	
 	return nil
 }
 
 // Verify room name's format and its coordonate
-func ValideRoom(line string) error {
+func ValideRoomFormat(line string) error {
 	//i must typed like this : a b b/c , spaces matter
 	test, err := regexp.MatchString(`^*([A-Za-z0-9]+ +[0-9]+ +[0-9]+)$`, line)
 	if err != nil {
@@ -116,4 +123,22 @@ func FileContent(filename string) ([]string, error) {
 	}
 
 	return fileLines, nil
+}
+
+func ValidLinkedRoom(rooms []Room, line string) error {
+
+	linkedRooms := strings.Split(line, "-")
+	var isFirstRoomSet , isSecondRoomSet bool
+	for i:=0; i<len(rooms); i++{
+		if rooms[i].Name == linkedRooms[0] {
+			isFirstRoomSet = true
+		}else if rooms[i].Name == linkedRooms[1] {
+			isSecondRoomSet = true
+		}
+	}
+
+	if !isSecondRoomSet || !isFirstRoomSet {
+		return errors.New("Error: invalid link format, unknow room found!");
+	}
+	return nil
 }
