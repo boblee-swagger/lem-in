@@ -84,7 +84,7 @@ func ValidateAntfarmData(fileLines []string) (AntFarm, error) {
 	}
 
 	for i := 0; i < len(data.Links); i++ {
-		err = ValidLinkedRoom(data.Rooms, data.Links[i])
+		err = ValideLinkedRoom(data.Rooms, data.Links[i])
 		if err != nil {
 			return AntFarm{}, err
 		}
@@ -146,7 +146,7 @@ func FileContent(filename string) ([]string, error) {
 	return fileLines, nil
 }
 
-func ValidLinkedRoom(rooms []Room, line string) error {
+func ValideLinkedRoom(rooms []Room, line string) error {
 
 	linkedRooms := strings.Split(line, "-")
 	var isFirstRoomSet, isSecondRoomSet bool
