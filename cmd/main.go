@@ -19,6 +19,12 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	fmt.Println(data.EndingRoom)
+	fmt.Printf("number of ants: %d\n",data.NumberOfAnts)
+	fmt.Printf("starting room: %s\n",data.StartingRoom.Name)
+	fmt.Printf("ending room: %s\n",data.EndingRoom.Name)
+	fmt.Printf("rooms: %v\n",data.Rooms)
+	fmt.Printf("links: %v\n",data.Links)
+
+	
 
 }
