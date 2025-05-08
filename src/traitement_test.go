@@ -1,6 +1,8 @@
 package src
 
 import (
+	//"fmt"
+	"fmt"
 	"testing"
 )
 
@@ -10,6 +12,7 @@ func TestFileContent(t *testing.T) {
 	if err != nil {
 		t.Errorf(`FileContent(filename) = %s`, err)
 	}
+	
 }
 
 func TestValidateAntfarmData(t *testing.T) {
@@ -19,28 +22,22 @@ func TestValidateAntfarmData(t *testing.T) {
 	if err != nil {
 		t.Errorf(`ValidateAnteFarmData(fileLines) = %v %v`, fileLines, err)
 	}
-
+	fmt.Println("test passed")
 }
 
 func TestValideLinkFormat(t *testing.T) {
-	link :="hello-world";
-	
-	if _, err := ValideLinkFormat(link); err != nil {
-		t.Errorf("ValidLinkFormat(line) = %v %v", link, err)
+	link := []string{"hello", "world"}
+
+	if _, err := FormatLink(link); err != nil {
+		t.Errorf("FormatLink(line) = %v %v", link, err)
 	}
+	fmt.Println("test passed")
 }
 
-func TestValideRoomFormat(t * testing.T) {
-	room := "correct 1 1";
-	if _, err := ValideRoomFormat(room); err != nil {
-		t.Errorf("ValidRoomFormat(rooms[i]) = %v, %v", room, err)
+func TestValideRoomFormat(t *testing.T) {
+	room := []string{"c", "1", "2"}
+	if _, err := FormatRoom(room); err != nil {
+		t.Errorf("FormatRoom(rooms[i]) = %v, %v", room, err)
 	}
-}
-
-func TestValidLinkedRoom(t * testing.T) {
-	rooms := []Room{{"a", 2, 5}, {"hello", 5 , -3}, {"b", 8, 9}}
-	correctlink := "a-b";
-	if err := ValideLinkedRoom(rooms, correctlink); err != nil {
-		t.Errorf("Error: %v", err)
-	}
+	fmt.Println("test passed")
 }

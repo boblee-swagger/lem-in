@@ -4,9 +4,9 @@
         -[x] pick the number number_of_ants from the first line (it should be a number between 1 and 1000)
         -[x] pick the first line after #start and set it as starting room  and ending room
     -[x] check room format's
-    -[] check for duplicate rooms
+    -[x] check for cyclic link
     -[x] check links validiy
-    -[] if there a link between #start room and #end room 
+    -[ ] check  for duplicatate link
 -[] throw error if file not valid
 -[] create tunnels and rooms 
 -[] finding paths
