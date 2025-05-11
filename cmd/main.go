@@ -4,7 +4,7 @@ import (
 	"lem-in/src"
 	"log"
 	"os"
-	"fmt"
+	//"fmt"
 
 )
 
@@ -24,13 +24,11 @@ func Start() {
 		log.Fatalln(err)
 	}
 
-	fmt.Println(antFarm.Rooms)
-	fmt.Println(antFarm.Links)
-
-	for _, room := range antFarm.GetRooms() {
-		room.SetNeighbors(antFarm)
+	for i := range antFarm.GetLinks() {
+		if i < len(antFarm.Rooms){
+			antFarm.GetRooms()[i].SetNeighbors(antFarm.Links, antFarm.Rooms)
+		}
+		antFarm.GetLinks()[i].SetWeight(antFarm.Rooms)		
 	}
-
-	
 
 }

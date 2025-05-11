@@ -16,10 +16,12 @@ func (e *Link) New (room1_name, room2_name string, weight int) Link{
 	}
 }
 
-func (e *Link) SetWeight(room1, room2 Room) {
-	//like maths we calcualte distance between two points basing on their coordinate
-	d := math.Pow(float64(room1.CordX + room2.CordX), 2) + math.Pow(float64(room1.CordY + room2.CordY), 2)
-	e.Weight = int(math.Sqrt(d))
+func (e *Link) SetWeight(rooms []Room) {
+	source := GetRoom(e.ConnectedRoom[0], rooms)
+	dest := GetRoom(e.ConnectedRoom[1], rooms)
+
+	d := math.Pow(float64(source.GetCordX() + dest.GetCordX()), 2) + math.Pow(float64(source.GetCordY() + dest.GetCordY()), 2)
+	e.Weight = int(math.Sqrt(d))	
 }
 
 func (e *Link) GetWeight() int {

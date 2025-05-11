@@ -7,13 +7,19 @@ type Room struct {
 	Neighbors []Room
 }
 
-func (r *Room) SetNeighbors(ant AntFarm) {
-	for _, link := range ant.Links{
+func (r * Room) New (name string, x,  y int) Room {
+	return Room {
+		Name: name,
+		CordX: x,
+		CordY: y,
+		Neighbors: []Room{},
+	}
+}
+
+func (r *Room) SetNeighbors(links []Link, rooms []Room) {
+	for _, link := range links{
 		if link.ConnectedRoom[0]== r.Name {
-			room := GetRoom(link.ConnectedRoom[1], ant.Rooms)
-			r.Neighbors = append(r.Neighbors, room)
-		}else if link.ConnectedRoom[1] == r.Name {
-			room := GetRoom(link.ConnectedRoom[1], ant.Rooms)
+			room := GetRoom(link.ConnectedRoom[1], rooms)
 			r.Neighbors = append(r.Neighbors, room)
 		}
 	}

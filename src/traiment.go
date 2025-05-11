@@ -102,16 +102,14 @@ func FormatLink(link []string) (error) {
 }
 
 func ParseRoom(data []string) (Room, error) {
-	room := Room{}
-	room.Name = data[0]
+	name := data[0]
 	X, errX := strconv.Atoi(data[1])
 	Y, errY := strconv.Atoi(data[2])
 	//room coordinate must be integer
 	if errX != nil || errY != nil {
 		return Room{}, errors.New("error: invalid room coordinates")
 	}
-	room.SetCordX(X)
-	room.SetCordY(Y)
-	return room, nil
+	var room Room
+	return room.New(name, X, Y) , nil
 }
 
