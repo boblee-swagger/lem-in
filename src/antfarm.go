@@ -8,6 +8,16 @@ type AntFarm struct {
 	Links        []Link
 }
 
+func (a *AntFarm) New (numAnts int, startingRoom, endingRoom Room, rooms []Room, links []Link) AntFarm{
+	return AntFarm{
+		NumberOfAnts: numAnts,
+		StartingRoom: startingRoom,
+		EndingRoom: endingRoom,
+		Rooms: rooms,
+		Links: links,
+	}
+}
+
 func (a *AntFarm) SetNumberOfAnts(ants int) {
 	a.NumberOfAnts = ants
 }
@@ -36,16 +46,8 @@ func (a *AntFarm) GetRooms() []Room {
 	return a.Rooms
 }
 
+
 func (a *AntFarm) GetLinks() []Link {
 	return a.Links
 }
-
-func (a *AntFarm) AddRoom(room Room) {
-	a.Rooms = append(a.Rooms, room)
-}
-
-func (a *AntFarm) AddLink(link Link) {
-	a.Links = append(a.Links, link)
-}
-
 

@@ -24,3 +24,14 @@ func FileContent(filename string) ([]string, error) {
 
 	return fileLines, nil
 }
+
+func GetRoom(roomName string, rooms []Room) Room {
+	for _,room := range rooms{
+		if room.Name == roomName {
+			return room
+		}
+	}
+	//remind that you can get an empty room
+	return Room{}
+}
+

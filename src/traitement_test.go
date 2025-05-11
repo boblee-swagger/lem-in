@@ -55,7 +55,7 @@ func TestFormatLink(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T){
-			if _,err := FormatLink(tt.fromTo); (err != nil) != tt.wantErr{
+			if err := FormatLink(tt.fromTo); (err != nil) != tt.wantErr{
 				t.Errorf("ForamtLink(%s) = %s", tt.fromTo, err)
 			}
 		})

@@ -8,22 +8,26 @@ import (
 
 // parses a list of file lines to extract useful data(n of ants...)
 func ValidateAntfarmData(fileLines []string) (AntFarm, error) {
-	var data = AntFarm{}
+	var data AntFarm
+	var links []Link
+	var rooms []Room
+	var StartingRoom, EndingRoom Room
+	var numAnts int
 	var nextRoomType string
 
-	for i := 0; i < len(fileLines); i++ {
+	for i := range fileLines {
 		line := strings.TrimSpace(fileLines[i])
 		if line == "" {
 			continue
 		}
 
-		if data.NumberOfAnts == 0 {
-			numAnts, err := strconv.Atoi(line)
+		if numAnts == 0 {
+			var err error
+			numAnts, err = strconv.Atoi(line)
 			if err == nil {
-				data.NumberOfAnts = numAnts
 				continue
 			}
-	}
+		}
 
 		// Check for special commands
 		if line == "##start" {
@@ -41,35 +45,39 @@ func ValidateAntfarmData(fileLines []string) (AntFarm, error) {
 			if err != nil {
 				return AntFarm{}, err
 			}
-			
+
 			// Assign room based on previous command
 			if nextRoomType == "start" {
-				data.StartingRoom = room
+				StartingRoom = room
 				nextRoomType = "" // Reset the flag
 			} else if nextRoomType == "end" {
-				data.EndingRoom = room
+				EndingRoom = room
 				nextRoomType = "" // Reset the flag
-			} 
-			data.Rooms = append(data.Rooms, room)
+			}
+			rooms = append(rooms, room)
 			continue
 		}
 
 		linkParts := strings.Split(line, "-")
 		if len(linkParts) == 2 {
-			link, err := FormatLink(linkParts)
+			err := FormatLink(linkParts)
 			if err != nil {
 				return AntFarm{}, err
 			}
-			data.Links = append(data.Links, link)
-			continue
+
+			var link = Link{
+				ConnectedRoom: linkParts,
+			}
+			links = append(links, link)
 		}
 	}
-	
+
 	// Validate the required fields
-	if data.StartingRoom.Name == "" || data.EndingRoom.Name == "" || data.NumberOfAnts <= 0 {
+	if StartingRoom.Name == "" || EndingRoom.Name == "" || numAnts <= 0 {
 		return AntFarm{}, errors.New("error: invalid data format")
 	}
-	return data, nil
+
+	return data.New(numAnts, StartingRoom, EndingRoom, rooms, links), nil
 }
 
 // Verify room name's format and its coordonate
@@ -85,17 +93,12 @@ func FormatRoom(room []string) (Room, error) {
 	return r, nil
 }
 
-func FormatLink(link []string) (Link, error) {
+func FormatLink(link []string) (error) {
 	//cyclic link
 	if link[0] == link[1] {
-		return Link{}, errors.New("error: invalid link format")
+		return errors.New("error: invalid link format")
 	}
-	result, err := ParseLink(link)
-	if err != nil {
-		return Link{}, err
-	}
-
-	return result, nil
+	return nil
 }
 
 func ParseRoom(data []string) (Room, error) {
@@ -107,14 +110,8 @@ func ParseRoom(data []string) (Room, error) {
 	if errX != nil || errY != nil {
 		return Room{}, errors.New("error: invalid room coordinates")
 	}
-	room.CordX = X
-	room.CordY = Y
+	room.SetCordX(X)
+	room.SetCordY(Y)
 	return room, nil
 }
 
-func ParseLink(data []string) (Link, error) {
-	link := Link{}
-	link.ConnectedRooms = append(link.ConnectedRooms, data[0])
-	link.ConnectedRooms = append(link.ConnectedRooms, data[1])
-	return link, nil
-}

@@ -7,9 +7,17 @@ type Room struct {
 	Neighbors []Room
 }
 
-func (r *Room) AddNeighbor(room Room) {
-	r.Neighbors = append(r.Neighbors, room)
-}
+func (r *Room) SetNeighbors(ant AntFarm) {
+	for _, link := range ant.Links{
+		if link.ConnectedRoom[0]== r.Name {
+			room := GetRoom(link.ConnectedRoom[1], ant.Rooms)
+			r.Neighbors = append(r.Neighbors, room)
+		}else if link.ConnectedRoom[1] == r.Name {
+			room := GetRoom(link.ConnectedRoom[1], ant.Rooms)
+			r.Neighbors = append(r.Neighbors, room)
+		}
+	}
+} 
 
 func (r *Room) GetNeighbors() []Room {
 	return r.Neighbors
